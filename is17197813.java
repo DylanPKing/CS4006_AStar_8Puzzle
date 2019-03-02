@@ -52,6 +52,7 @@ public class is17197813
 				end = converter(state);
 		}
 		// Okay I think I'm done with validation...
+		// Feel free to use start and end which are int arrays containing the inputed start and end states.
 	}
 
 	/**
