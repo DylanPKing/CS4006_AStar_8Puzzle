@@ -1,12 +1,15 @@
 import javax.swing.JOptionPane;
+import java.util.*;
+
 /**
  * A* search project by:
- * @author Dylan King - id here later
- * @author Louise Madden - id here layer
+ * @author Dylan King - 17197813
+ * @author Louise Madden - 17198232
  * @author Szymon Sztyrmer - 17200296
  */
 public class is17197813
 {
+
 	/**
 	 * The main driver for the project I guess
 	 */
@@ -17,12 +20,12 @@ public class is17197813
 		int puzzleSize = 0;
 		int control = 0;
 		int [] start;
+		int [] current;
 		int [] end;
 		String state = "";
 
 		// Make an object of validator type because I can
-		is17197813 checker = new is17197813();
-		is17197813.validator validator = checker.new validator();
+		validator validator = new validator();
 
 		welcome();
 		// Get the puzzle type for this
@@ -53,6 +56,8 @@ public class is17197813
 		}
 		// Okay I think I'm done with validation...
 		// Feel free to use start and end which are int arrays containing the inputed start and end states.
+		current = Arrays.copyOf(start, start.length);
+		aStar(current, end);
 	}
 
 	/**
@@ -63,8 +68,8 @@ public class is17197813
 	{
 		JOptionPane.showMessageDialog(null, "Welcome to our A* search  project." +
 																	"\nMade by:" + 
-																	"\nDylan King - Id placeholder" +
-																	"\nLouise Madden - Id placeholder" +
+																	"\nDylan King - 17197813" +
+																	"\nLouise Madden - 17198232" +
 																	"\nSzymon Sztyrmer - 17200296" + 
 																	"\nClick ok to continue.", "Greetings", 1);
 	}
@@ -122,81 +127,84 @@ public class is17197813
 			numbers[i] = Integer.parseInt(numbersString[i]);
 		return numbers;
 	}
-	/**
-	 * An inner class that will be used to
-	 * do all the validation and checking of input
-	 * to keep this nice an object oriented
-	 * while keeping everything in 1 file... For whatever reason that was enforced...
-	 * @author Szymon Sztyrmer
-	 */
-	class validator
-	{
-		// Private datafields area
-		private int inputSize;
-		private int limit;
-		private String [] numbers;
-		private String [] errorMessages;
-		private String pattern;
 
-		/**
-		 * Constructor for the validator
-		 * @author Szymon Sztyrmer
-		 */
-		public validator()
-		{
-			//System.out.println("I am the constructor,\nFear me\nROOOAAAARR!!"); just checking that this works and it does, yay!
-			errorMessages = new String [] {"Sorry, it would appear that you did something wrong.\nIt's your fault not mine!", 
-															"I mean you could do that...\nBut you could also follow the instructions I guess.",
-															"Did your hand slip?\nI mean there is no way you typed that in deliberately right?",
-															"You can keep on going trying to break this code.\nOr you could actually do what it asks."};
-		}
-
-		/**
-		 * This method check that the input is of correct size and all numeric
-		 * @param int puzzleSize -> type of puzzle
-		 * @return boolean -> was it successful?
-		 * @author Szymon Sztyrmer
-		 */
-		public int checkInput(int puzzleSize, String state)
-		{
-			// Another beautiful statement
-			inputSize = (puzzleSize == 0) ? 9 : 16;
-			pattern = (puzzleSize == 0) ? "[0-9]{1}" : "[0-9]{1,2}";
-			limit = (puzzleSize == 0) ? 9 : 15;
-			
-			// Check for the correct number of elements
-			numbers = state.split(" ");
-			if(numbers.length != inputSize)
-			{
-				JOptionPane.showMessageDialog(null, errorMessages[(int)(Math.random() * errorMessages.length)], 
-																	"Size Mismatch Error", 0);
-				return 0;
-			}
-			// Check that all are numeric
-			for(int i = 0; i < numbers.length - 1; i++)
-			{
-				if(!(numbers[i].matches(pattern)) || Double.parseDouble(numbers[i]) > limit)
-				{
-					JOptionPane.showMessageDialog(null, errorMessages[(int)(Math.random() * errorMessages.length)], 
-																		"Numeric Input Error", 0);
-					return 0;
-				}
-				for(int j = i + 1; j < numbers.length; j++)
-					if(numbers[i].equals(numbers[j]) || !(numbers[j].matches(pattern)))
-					{
-						JOptionPane.showMessageDialog(null, errorMessages[(int)(Math.random() * errorMessages.length)], 
-																			"duplicated Input Error", 0);
-						return 0;
-					}
-			}
-			return 1;
-		}
-	}
-
-	public static void aStar()
+	
+	public static void aStar(int[] c, int[] g)
 	{
 		ArrayList<Integer> open = new ArrayList<Integer>();
 		ArrayList<Integer> closed = new ArrayList<Integer>();
+		
 
+	}
+}
+
+/**
+ * An inner class that will be used to
+ * do all the validation and checking of input
+ * to keep this nice an object oriented
+ * while keeping everything in 1 file... For whatever reason that was enforced...
+ * @author Szymon Sztyrmer
+ */
+class validator
+{
+	// Private datafields area
+	private int inputSize;
+	private int limit;
+	private String [] numbers;
+	private String [] errorMessages;
+	private String pattern;
+
+	/**
+	 * Constructor for the validator
+	 * @author Szymon Sztyrmer
+	 */
+	public validator()
+	{
+		//System.out.println("I am the constructor,\nFear me\nROOOAAAARR!!"); just checking that this works and it does, yay!
+		errorMessages = new String [] {"Sorry, it would appear that you did something wrong.\nIt's your fault not mine!", 
+														"I mean you could do that...\nBut you could also follow the instructions I guess.",
+														"Did your hand slip?\nI mean there is no way you typed that in deliberately right?",
+														"You can keep on going trying to break this code.\nOr you could actually do what it asks."};
+	}
+
+	/**
+	 * This method check that the input is of correct size and all numeric
+	 * @param int puzzleSize -> type of puzzle
+	 * @return boolean -> was it successful?
+	 * @author Szymon Sztyrmer
+	 */
+	public int checkInput(int puzzleSize, String state)
+	{
+		// Another beautiful statement
+		inputSize = (puzzleSize == 0) ? 9 : 16;
+		pattern = (puzzleSize == 0) ? "[0-9]{1}" : "[0-9]{1,2}";
+		limit = (puzzleSize == 0) ? 9 : 15;
+		
+		// Check for the correct number of elements
+		numbers = state.split(" ");
+		if(numbers.length != inputSize)
+		{
+			JOptionPane.showMessageDialog(null, errorMessages[(int)(Math.random() * errorMessages.length)], 
+																"Size Mismatch Error", 0);
+			return 0;
+		}
+		// Check that all are numeric
+		for(int i = 0; i < numbers.length - 1; i++)
+		{
+			if(!(numbers[i].matches(pattern)) || Double.parseDouble(numbers[i]) > limit)
+			{
+				JOptionPane.showMessageDialog(null, errorMessages[(int)(Math.random() * errorMessages.length)], 
+																	"Numeric Input Error", 0);
+				return 0;
+			}
+			for(int j = i + 1; j < numbers.length; j++)
+				if(numbers[i].equals(numbers[j]) || !(numbers[j].matches(pattern)))
+				{
+					JOptionPane.showMessageDialog(null, errorMessages[(int)(Math.random() * errorMessages.length)], 
+																		"duplicated Input Error", 0);
+					return 0;
+				}
+		}
+		return 1;
 	}
 }
