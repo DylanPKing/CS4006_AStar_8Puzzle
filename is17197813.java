@@ -191,7 +191,6 @@ public class is17197813
 	/**
 	 * Method to determne what directions are valid moves.
 	 * Void for the moment until I figure out what I need to change it to if anything
-	 * Booleans aren't accually needed now but I feel like they might be when we get more into it
 	 * @param int[] current state because I cant get the next move if I don't know where I am now
 	 * @param int rows, need to know the row size to know possible directions
 	 * @author Louise Madden
@@ -199,10 +198,6 @@ public class is17197813
 	public static void validMoves(int current[], int rows)
 	{
 		int zeroIndex = 0;
-		boolean up = false;
-		boolean down = false;
-		boolean right = false;
-		boolean left = false;
 		
 		for(int i = 0; i < current.length; i++)
 		{
@@ -214,25 +209,21 @@ public class is17197813
 		}
 		if(zeroIndex >= rows)
 		{
-			up = true;
 			System.out.println("(a) " + current[zeroIndex - rows] + " to the south");
 		}
 
 		if(zeroIndex <= (current.length - rows))
 		{
-			down = true;
 			System.out.println("(b) " + current[zeroIndex + rows] + " to the north");
 		}
 
 		if(zeroIndex % rows != (rows-1))
 		{
-			right = true;
 			System.out.println("(c) " + current[zeroIndex + 1] + " to the west");
 		}
 
 		if(zeroIndex % rows != 0)
 		{
-			left = true;
 			System.out.println("(d) " + current[zeroIndex - 1] + " to the east");
 		}
 	}
