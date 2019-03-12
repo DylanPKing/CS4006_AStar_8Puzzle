@@ -9,6 +9,7 @@ import java.util.*;
  */
 public class is17197813
 {
+	private static int [] end;
 
 	/**
 	 * The main driver for the project I guess
@@ -21,7 +22,6 @@ public class is17197813
 		int control = 0;
 		int [] start;
 		int [] current;
-		int [] end;
 		String state = "";
 
 		// Make an object of validator type because I can
@@ -136,6 +136,33 @@ public class is17197813
 		
 
 	}
+
+	public static int calculateHScore(int[] current)
+	{
+		int fScore = 0;
+		for (int i = 0; i < current.length; i++)
+		{
+			int num = current[i];
+			int goalIndex = findGoalIndex(num);
+			fScore += Math.abs(goalIndex - i);
+		}
+		return fScore;
+	}
+
+	public static int findGoalIndex(int n)
+	{
+		int goal = -1;
+		boolean found = false;
+		for (int i = 0; i < end.length && !found; i++)
+		{
+			if (end[i] == n)
+			{
+				goal = i;
+				found = true;
+			}
+		}
+		return goal;
+	}
 }
 
 /**
@@ -206,5 +233,16 @@ class validator
 				}
 		}
 		return 1;
+	}
+}
+
+class Node
+{
+	int[] layout;
+	int fScore;
+	public Node(int[] layout, int gScore)
+	{
+		this.layout = layout;
+		fScore = gScore + is17197813.calculateHScore(layout);
 	}
 }
