@@ -58,6 +58,10 @@ public class is17197813
 		// Feel free to use start and end which are int arrays containing the inputed start and end states.
 		current = Arrays.copyOf(start, start.length);
 		aStar(current, end);
+
+		int rows = (int)Math.sqrt((current.length));
+		printState(current, rows);
+		validMoves(current, rows);
 	}
 
 	/**
@@ -162,6 +166,75 @@ public class is17197813
 			}
 		}
 		return goal;
+	}
+
+	/**
+	 * This method prints the current state of the puzzle
+	 * @param int[] the current state
+	 * @param int rows so I know when to new line
+	 * @author Louise Madden
+	 */
+	public static void printState(int current[], int rows)
+	{
+		for(int i = 0; i < current.length; i++)
+		{
+			if(current[i] != 0)
+				System.out.print(current[i] + " ");
+			else
+				System.out.print("  ");
+
+			if (i % (rows) == rows - 1)
+				System.out.print("\n");
+		}
+	}
+
+	/**
+	 * Method to determne what directions are valid moves.
+	 * Void for the moment until I figure out what I need to change it to if anything
+	 * Booleans aren't accually needed now but I feel like they might be when we get more into it
+	 * @param int[] current state because I cant get the next move if I don't know where I am now
+	 * @param int rows, need to know the row size to know possible directions
+	 * @author Louise Madden
+	 */
+	public static void validMoves(int current[], int rows)
+	{
+		int zeroIndex = 0;
+		boolean up = false;
+		boolean down = false;
+		boolean right = false;
+		boolean left = false;
+		
+		for(int i = 0; i < current.length; i++)
+		{
+			if(current[i] == 0)
+			{
+				zeroIndex = i;
+				break;
+			}
+		}
+		if(zeroIndex >= rows)
+		{
+			up = true;
+			System.out.println("(a) " + current[zeroIndex - rows] + " to the south");
+		}
+
+		if(zeroIndex <= (current.length - rows))
+		{
+			down = true;
+			System.out.println("(b) " + current[zeroIndex + rows] + " to the north");
+		}
+
+		if(zeroIndex % rows != (rows-1))
+		{
+			right = true;
+			System.out.println("(c) " + current[zeroIndex + 1] + " to the west");
+		}
+
+		if(zeroIndex % rows != 0)
+		{
+			left = true;
+			System.out.println("(d) " + current[zeroIndex - 1] + " to the east");
+		}
 	}
 }
 
