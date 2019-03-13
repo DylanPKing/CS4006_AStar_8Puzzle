@@ -131,22 +131,22 @@ public class is17197813
 	
 	public static void aStar(int[] c, int[] g)
 	{
-		ArrayList<Integer> open = new ArrayList<Integer>();
-		ArrayList<Integer> closed = new ArrayList<Integer>();
+		ArrayList<Node> open = new ArrayList<Node>();
+		ArrayList<Node> closed = new ArrayList<Node>();
 		
 
 	}
 
 	public static int calculateHScore(int[] current)
 	{
-		int fScore = 0;
+		int hScore = 0;
 		for (int i = 0; i < current.length; i++)
 		{
 			int num = current[i];
 			int goalIndex = findGoalIndex(num);
-			fScore += Math.abs(goalIndex - i);
+			hScore += Math.abs(goalIndex - i);
 		}
-		return fScore;
+		return hScore;
 	}
 
 	public static int findGoalIndex(int n)
@@ -238,11 +238,30 @@ class validator
 
 class Node
 {
-	int[] layout;
-	int fScore;
+	private int[] layout;
+	private int hScore, gScore, fScore;
+	private ArrayList<Node> children;
 	public Node(int[] layout, int gScore)
 	{
 		this.layout = layout;
-		fScore = gScore + is17197813.calculateHScore(layout);
+		this.gScore = gScore;
+		hScore = is17197813.calculateHScore(layout);
+		fScore = gScore + hScore;
+		children = new ArrayList<Node>();
+		
+	}
+
+	/**
+	 * @return the gScore
+	 */
+	public int getgScore() {
+		return gScore;
+	}
+
+	/**
+	 * @return the fScore
+	 */
+	public int getfScore() {
+		return fScore;
 	}
 }
