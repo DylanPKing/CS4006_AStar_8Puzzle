@@ -58,6 +58,10 @@ public class is17197813
 		// Feel free to use start and end which are int arrays containing the inputed start and end states.
 		current = Arrays.copyOf(start, start.length);
 		aStar(current, end);
+
+		int rows = (int)Math.sqrt((current.length));
+		printState(current, rows);
+		validMoves(current, rows);
 	}
 
 	/**
@@ -163,6 +167,97 @@ public class is17197813
 		}
 		return goal;
 	}
+
+	/**
+	 * This method prints the current state of the puzzle
+	 * @param int[] the current state
+	 * @param int rows so I know when to new line
+	 * @author Louise Madden
+	 */
+	public static void printState(int current[], int rows)
+	{
+		for(int i = 0; i < current.length; i++)
+		{
+			if(current[i] != 0)
+				System.out.print(current[i] + " ");
+			else
+				System.out.print("  ");
+
+			if (i % (rows) == rows - 1)
+				System.out.print("\n");
+		}
+	}
+
+	/**
+	 * Method to determne what directions are valid moves.
+	 * Void for the moment until I figure out what I need to change it to if anything
+	 * @param int[] current state because I cant get the next move if I don't know where I am now
+	 * @param int rows, need to know the row size to know possible directions
+	 * @author Louise Madden
+	 */
+	public static void validMoves(int current[], int rows)
+	{
+		int zeroIndex = 0;
+		
+		for(int i = 0; i < current.length; i++)
+		{
+			if(current[i] == 0)
+			{
+				zeroIndex = i;
+				break;
+			}
+		}
+		char[] options = {'a', 'b', 'c', 'd'};
+		int optionCount = 0;
+		int[] layout = current;
+
+		if(zeroIndex >= rows)
+		{
+			System.out.println("(" + options[optionCount] + ") " + current[zeroIndex - rows] + " to the south");
+			optionCount++;
+			layout[zeroIndex] = layout[zeroIndex - rows];
+			layout[zeroIndex - rows] = 0;
+
+			Node south = new Node(layout, 1);
+			System.out.println("\tf score = " + south.getfScore() + "\n");
+		}
+
+		if(zeroIndex <= (current.length - rows))
+		{
+			System.out.println("(" + options[optionCount] + ") "   + current[zeroIndex + rows] + " to the north");
+			optionCount++;
+			layout = current;
+			layout[zeroIndex] = layout[zeroIndex + rows];
+			layout[zeroIndex - rows] = 0;
+
+			Node north = new Node(layout, 1);
+			System.out.println("\tf score = " + north.getfScore() + "\n");
+		}
+
+		if(zeroIndex % rows != (rows-1))
+		{
+			System.out.println("(" + options[optionCount] + ") "  + current[zeroIndex + 1] + " to the west");
+			optionCount++;
+			layout = current;
+			layout[zeroIndex] = layout[zeroIndex + 1];
+			layout[zeroIndex + 1] = 0;
+
+			Node west = new Node(layout, 1);
+			System.out.println("\tf score = " + west.getfScore() + "\n");
+		}
+
+		if(zeroIndex % rows != 0)
+		{
+			System.out.println("(" + options[optionCount] + ") "  + current[zeroIndex - 1] + " to the east");
+			optionCount++;
+			layout = current;
+			layout[zeroIndex] = layout[zeroIndex - 1];
+			layout[zeroIndex - 1] = 0;
+
+			Node east = new Node(layout, 1);
+			System.out.println("\tf score = " + east.getfScore() + "\n");
+		}
+	}
 }
 
 /**
@@ -256,6 +351,13 @@ class Node
 	 */
 	public int getgScore() {
 		return gScore;
+	}
+
+	/**
+	 * @return the fScore
+	 */
+	public int getfScore() {
+		return fScore;
 	}
 
 	/**
