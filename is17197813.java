@@ -207,24 +207,55 @@ public class is17197813
 				break;
 			}
 		}
+		char[] options = {'a', 'b', 'c', 'd'};
+		int optionCount = 0;
+		int[] layout = current;
+
 		if(zeroIndex >= rows)
 		{
-			System.out.println("(a) " + current[zeroIndex - rows] + " to the south");
+			System.out.println("(" + options[optionCount] + ") " + current[zeroIndex - rows] + " to the south");
+			optionCount++;
+			layout[zeroIndex] = layout[zeroIndex - rows];
+			layout[zeroIndex - rows] = 0;
+
+			Node south = new Node(layout, 1);
+			System.out.println("\tf score = " + south.getfScore() + "\n");
 		}
 
 		if(zeroIndex <= (current.length - rows))
 		{
-			System.out.println("(b) " + current[zeroIndex + rows] + " to the north");
+			System.out.println("(" + options[optionCount] + ") "   + current[zeroIndex + rows] + " to the north");
+			optionCount++;
+			layout = current;
+			layout[zeroIndex] = layout[zeroIndex + rows];
+			layout[zeroIndex - rows] = 0;
+
+			Node north = new Node(layout, 1);
+			System.out.println("\tf score = " + north.getfScore() + "\n");
 		}
 
 		if(zeroIndex % rows != (rows-1))
 		{
-			System.out.println("(c) " + current[zeroIndex + 1] + " to the west");
+			System.out.println("(" + options[optionCount] + ") "  + current[zeroIndex + 1] + " to the west");
+			optionCount++;
+			layout = current;
+			layout[zeroIndex] = layout[zeroIndex + 1];
+			layout[zeroIndex + 1] = 0;
+
+			Node west = new Node(layout, 1);
+			System.out.println("\tf score = " + west.getfScore() + "\n");
 		}
 
 		if(zeroIndex % rows != 0)
 		{
-			System.out.println("(d) " + current[zeroIndex - 1] + " to the east");
+			System.out.println("(" + options[optionCount] + ") "  + current[zeroIndex - 1] + " to the east");
+			optionCount++;
+			layout = current;
+			layout[zeroIndex] = layout[zeroIndex - 1];
+			layout[zeroIndex - 1] = 0;
+
+			Node east = new Node(layout, 1);
+			System.out.println("\tf score = " + east.getfScore() + "\n");
 		}
 	}
 }
@@ -308,5 +339,12 @@ class Node
 	{
 		this.layout = layout;
 		fScore = gScore + is17197813.calculateHScore(layout);
+	}
+
+	/**
+	 * @return the fScore
+	 */
+	public int getfScore() {
+		return fScore;
 	}
 }
