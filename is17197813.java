@@ -10,7 +10,7 @@ import java.util.*;
 public class is17197813
 {
 	private static int [] end;
-
+	private static int puzzleSize = 0;
 	/**
 	 * The main driver for the project I guess
 	 */
@@ -18,7 +18,6 @@ public class is17197813
 	{
 		// Variable space as usual
 		int valid = 0;
-		int puzzleSize = 0;
 		int control = 0;
 		int [] start;
 		int [] current;
@@ -29,7 +28,7 @@ public class is17197813
 
 		welcome();
 		// Get the puzzle type for this
-		puzzleSize = choosePuzzle();
+		choosePuzzle();
 		start = new int [puzzleSize];
 		end = new int [puzzleSize];
 		// Get the user input for the start state and end state
@@ -83,16 +82,14 @@ public class is17197813
 	 * @return int puzzleSize -> is it the 8-puzzle or the 15-puzzle?
 	 * @author Szymon Sztyrmer
 	 */
-	public static int choosePuzzle()
+	public static void choosePuzzle()
 	{
 		// Displays some lovely buttons to select from
 		String [] puzzleTypes = {"8-Puzzle", "15-Puzzle"};
-		int puzzleSize = 0;
 		puzzleSize = JOptionPane.showOptionDialog(null,
             											"Would you like to use the 8-Puzzle or the 15-Puzzle?", "Puzzle Selector",
              											JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
 														 null, puzzleTypes, puzzleTypes[0]);
-		return puzzleSize;
 	}
 
 	/**
@@ -148,9 +145,80 @@ public class is17197813
 		{
 			int num = current[i];
 			int goalIndex = findGoalIndex(num);
-			hScore += Math.abs(goalIndex - i);
+			hScore += findGoalDistance(i, goalIndex);//Math.abs(goalIndex - i);
 		}
 		return hScore;
+	}
+
+	public static int findGoalDistance(int start, int end)
+	{
+		int score = 0;
+		/* Compares the current index of the value in question with 
+		   the goal index, based on the 1D array we use */
+		int distance = Math.abs(end - start);
+		// Checks if it's an 8-puzzle or 15-puzzle 
+		if (puzzleSize == 0)
+		{
+			// if the goal is directly above/below/to the side
+			if (distance == 1 || distance == 3)
+				score = 1;
+
+			/* covers all other cases except top-left <-> bottom-middle
+			   calculates moving 2 spaces in any direction, and corner to corner */
+			else if (distance == 2 || distance == 4 || distance == 6 || distance == 8)
+			{
+				// assumes the goal is two spaces away by default
+				score = 2;
+
+				// checks if the goal is in the opposite corner
+				if ((start == 2 && end == 6) || (start == 6 && end == 2) || distance == 8)
+					score = 4;
+			}
+			// covers final case: top left <-> bottom middle
+			else if (distance == 7)
+				score = 3;
+		}
+		else // For the 15-puzzle
+		{
+			if (distance == 1 || distance == 4)
+				score = 1;
+			else if (distance == 2 || distance == 3 || distance == 5 || distance == 6 || distance == 8)
+			{
+				score = 2;
+				if ((start % 4 == 3 && end % 4 == 1) || (start % 4 == 0 && end % 4 == 2) ||
+					(start % 4 == 1 && end % 4 == 3) || (start % 4 == 2 && end % 4 == 0) ||
+					(start / 4 == end / 4) || distance == 6)
+					score = 3;
+			}
+			else if (distance == 7)
+			{
+				score = 3;
+				if ((start % 4 == 3 && end % 4 == 0) || (start % 4 == 0 && end % 4 == 3))
+					score = 4;
+			}		
+			else if (distance == 9)
+			{
+				score = 3;
+				if (start == 3 || start == 12)
+					score = 6;
+			}
+			else if (distance == 10 || distance == 11)
+			{
+				score = 4;
+				if ((start == 2 || start == 3 || end == 3 || end == 3) ||
+					(start == 0 || start == 4 || end == 0 || end == 4))
+					score = 5;
+			}
+			else if (distance == 12)
+				score = 3;
+			else if (distance == 13)
+				score = 4;
+			else if (distance == 14)
+				score = 5;
+			else if (distance == 15)
+				score = 6;
+		}
+		return score;
 	}
 
 	public static int findGoalIndex(int n)
@@ -209,7 +277,7 @@ public class is17197813
 		}
 		char[] options = {'a', 'b', 'c', 'd'};
 		int optionCount = 0;
-		int[] layout = current;
+		int[] layout = Arrays.copyOf(current, current.length);
 
 		if(zeroIndex >= rows)
 		{
@@ -226,7 +294,7 @@ public class is17197813
 		{
 			System.out.println("(" + options[optionCount] + ") "   + current[zeroIndex + rows] + " to the north");
 			optionCount++;
-			layout = current;
+			layout = Arrays.copyOf(current, current.length);
 			layout[zeroIndex] = layout[zeroIndex + rows];
 			layout[zeroIndex - rows] = 0;
 
@@ -238,7 +306,7 @@ public class is17197813
 		{
 			System.out.println("(" + options[optionCount] + ") "  + current[zeroIndex + 1] + " to the west");
 			optionCount++;
-			layout = current;
+			layout = Arrays.copyOf(current, current.length);
 			layout[zeroIndex] = layout[zeroIndex + 1];
 			layout[zeroIndex + 1] = 0;
 
@@ -250,7 +318,7 @@ public class is17197813
 		{
 			System.out.println("(" + options[optionCount] + ") "  + current[zeroIndex - 1] + " to the east");
 			optionCount++;
-			layout = current;
+			layout = Arrays.copyOf(current, current.length);
 			layout[zeroIndex] = layout[zeroIndex - 1];
 			layout[zeroIndex - 1] = 0;
 
@@ -351,13 +419,6 @@ class Node
 	 */
 	public int getgScore() {
 		return gScore;
-	}
-
-	/**
-	 * @return the fScore
-	 */
-	public int getfScore() {
-		return fScore;
 	}
 
 	/**
