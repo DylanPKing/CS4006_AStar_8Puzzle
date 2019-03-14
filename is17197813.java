@@ -296,7 +296,7 @@ public class is17197813
 			optionCount++;
 			layout = Arrays.copyOf(current, current.length);
 			layout[zeroIndex] = layout[zeroIndex + rows];
-			layout[zeroIndex - rows] = 0;
+			layout[zeroIndex + rows] = 0;
 
 			Node north = new Node(layout, 1);
 			System.out.println("\tf score = " + north.getfScore() + "\n");

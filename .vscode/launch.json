@@ -9,6 +9,13 @@
 			"name": "CodeLens (Launch) - is17197813",
 			"request": "launch",
 			"mainClass": "is17197813",
+			"projectName": "CS4006_AStar_8Puzzle_792509d3"
+		},
+		{
+			"type": "java",
+			"name": "CodeLens (Launch) - is17197813",
+			"request": "launch",
+			"mainClass": "is17197813",
 			"projectName": "CS4006_AStar_8Puzzle_fa006aec"
 		},
 		{
