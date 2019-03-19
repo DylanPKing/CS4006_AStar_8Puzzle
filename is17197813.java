@@ -58,9 +58,16 @@ public class is17197813
 		current = Arrays.copyOf(start, start.length);
 		aStar(current, end);
 
-		int rows = (int)Math.sqrt((current.length));
-		printState(current, rows);
-		validMoves(current, rows);
+		if(!Arrays.equals(start, end))
+		{
+			int rows = (int)Math.sqrt((current.length));
+			printState(current, rows);
+			validMoves(current, rows);
+		}
+		else
+		{
+			JOptionPane.showMessageDialog(null, "Congratulations! You got to the end");
+		}
 	}
 
 	/**
@@ -265,6 +272,7 @@ public class is17197813
 	 */
 	public static void validMoves(int current[], int rows)
 	{
+
 		int zeroIndex = 0;
 		
 		for(int i = 0; i < current.length; i++)
