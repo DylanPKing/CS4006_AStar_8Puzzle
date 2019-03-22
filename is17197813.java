@@ -43,8 +43,10 @@ public class is17197813
 			else if(state.equals("quit"))
 				break;
 			else
+			{
 				control = validator.checkInput(puzzleSize, state);
-			valid += control;
+				valid += control;
+			}
 
 			if(valid == 1)
 			{
@@ -103,6 +105,7 @@ public class is17197813
 	{
 		// Behold this beautiful turnory statement to differenciate between start and end
 		String message = (state == 0) ? "Please enter the start state:" : "Please enter the end state";
+
 		String input = JOptionPane.showInputDialog(null, message);
 		if(input == null)
 		{
