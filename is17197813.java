@@ -295,7 +295,7 @@ public class is17197813
 			layout[zeroIndex - rows] = 0;
 
 			Node south = new Node(layout, 1);
-			System.out.println("\tf score = " + south.getfScore() + "\n");
+			System.out.println("\th score = " + south.gethScore() + "\n");
 		}
 
 		if(zeroIndex <= (current.length - rows))
@@ -307,7 +307,7 @@ public class is17197813
 			layout[zeroIndex + rows] = 0;
 
 			Node north = new Node(layout, 1);
-			System.out.println("\tf score = " + north.getfScore() + "\n");
+			System.out.println("\th score = " + north.gethScore() + "\n");
 		}
 
 		if(zeroIndex % rows != (rows-1))
@@ -319,7 +319,7 @@ public class is17197813
 			layout[zeroIndex + 1] = 0;
 
 			Node west = new Node(layout, 1);
-			System.out.println("\tf score = " + west.getfScore() + "\n");
+			System.out.println("\th score = " + west.gethScore() + "\n");
 		}
 
 		if(zeroIndex % rows != 0)
@@ -331,7 +331,7 @@ public class is17197813
 			layout[zeroIndex - 1] = 0;
 
 			Node east = new Node(layout, 1);
-			System.out.println("\tf score = " + east.getfScore() + "\n");
+			System.out.println("\th score = " + east.gethScore() + "\n");
 		}
 	}
 }
@@ -434,5 +434,12 @@ class Node
 	 */
 	public int getfScore() {
 		return fScore;
+	}
+
+	/**
+	 * @return the hScore
+	 */
+	public int gethScore() {
+		return hScore;
 	}
 }
