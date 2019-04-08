@@ -56,7 +56,11 @@ public class is17197813
 		// Okay I think I'm done with validation...
 		// Feel free to use start and end which are int arrays containing the inputed start and end states.
 		current = Arrays.copyOf(start, start.length);
-		aStar(current, end);
+		Node currentNode = new Node(current, 0);
+		ArrayList<Node> open = new ArrayList<Node>();
+		ArrayList<Node> closed = new ArrayList<Node>();
+
+		Node finalState = aStar(currentNode, end, open, closed);
 
 		if(!Arrays.equals(start, end))
 		{
@@ -137,12 +141,24 @@ public class is17197813
 	}
 
 	
-	public static void aStar(int[] c, int[] g)
+	public static Node aStar(Node c, int[] g, ArrayList<Node> open, ArrayList<Node> closed)
 	{
-		ArrayList<Node> open = new ArrayList<Node>();
-		ArrayList<Node> closed = new ArrayList<Node>();
-		
-
+		open.add(c);
+		if (c.equalsLayoutOnly(g))
+			return c;
+			//change to node finalNode = c
+			//call again if there is another state with a lower fscore
+			//if there is no lower fscore, return finalNode
+		else
+		{
+			//move line 146 to before call
+			//here get children and add all to open
+			//move c to closed
+			//loop through open to check if its already in closed if true remove
+			//and find the one with the lowest f score
+			//recursion astar lowest fscore = c
+			//the rest is the same
+		}
 	}
 
 	public static int calculateHScore(int[] current)
@@ -270,9 +286,13 @@ public class is17197813
 	 * @param int rows, need to know the row size to know possible directions
 	 * @author Louise Madden
 	 */
-	public static void validMoves(int current[], int rows)
+	public static void validMoves(int current[], int rows)//change to pass in a node and open and closed
 	{
-
+		//stop printing
+		//generate them all as new nodes
+		//add them to the open list
+		//remember to pass current in as the parent of the new nodes
+		
 		int zeroIndex = 0;
 		
 		for(int i = 0; i < current.length; i++)
@@ -412,6 +432,7 @@ class Node
 	private int[] layout;
 	private int hScore, gScore, fScore;
 	private ArrayList<Node> children;
+	private Node previous;
 	public Node(int[] layout, int gScore)
 	{
 		this.layout = layout;
@@ -419,27 +440,64 @@ class Node
 		hScore = is17197813.calculateHScore(layout);
 		fScore = gScore + hScore;
 		children = new ArrayList<Node>();
-		
+		previous = null;
+	}
+
+	public Node(int[] layout, int gScore, Node previous)
+	{
+		this.layout = layout;
+		this.gScore = gScore;
+		hScore = is17197813.calculateHScore(layout);
+		fScore = gScore + hScore;
+		children = new ArrayList<Node>();
+		this.previous = previous;
 	}
 
 	/**
 	 * @return the gScore
 	 */
-	public int getgScore() {
+	public int getgScore()
+	{
 		return gScore;
 	}
 
 	/**
 	 * @return the fScore
 	 */
-	public int getfScore() {
+	public int getfScore()
+	{
 		return fScore;
 	}
 
 	/**
 	 * @return the hScore
 	 */
-	public int gethScore() {
+	public int gethScore()
+	{
 		return hScore;
+	}
+
+	/**
+	 * @return the layout
+	 */
+	public int[] getLayout()
+	{
+		return layout;
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (obj instanceof Node)
+			return gScore == ((Node)obj).getgScore() &&
+				   hScore == ((Node)obj).gethScore() &&
+				   Arrays.equals(layout, ((Node)obj).getLayout());
+		else
+			return false;
+	}
+
+	public boolean equalsLayoutOnly(int[] end)
+	{
+		return Arrays.equals(layout, end);
 	}
 }
