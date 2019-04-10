@@ -62,7 +62,8 @@ public class is17197813
 		ArrayList<Node> open = new ArrayList<Node>();
 		ArrayList<Node> closed = new ArrayList<Node>();
 
-		Node finalState = aStar(currentNode, end, open, closed);
+		open.add(currentNode);
+		Node finalState = aStar(currentNode, end, open, closed, null);
 
 		if(!Arrays.equals(start, end))
 		{
@@ -99,10 +100,9 @@ public class is17197813
 	{
 		// Displays some lovely buttons to select from
 		String [] puzzleTypes = {"8-Puzzle", "15-Puzzle"};
-		puzzleSize = JOptionPane.showOptionDialog(null,
-            											"Would you like to use the 8-Puzzle or the 15-Puzzle?", "Puzzle Selector",
-             											JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
-														 null, puzzleTypes, puzzleTypes[0]);
+		puzzleSize = JOptionPane.showOptionDialog(null, "Would you like to use the 8-Puzzle or the 15-Puzzle?",
+												 "Puzzle Selector", JOptionPane.YES_NO_OPTION,
+												 JOptionPane.QUESTION_MESSAGE, null, puzzleTypes, puzzleTypes[0]);
 	}
 
 	/**
@@ -144,17 +144,35 @@ public class is17197813
 	}
 
 	
-	public static Node aStar(Node c, int[] g, ArrayList<Node> open, ArrayList<Node> closed)
+	public static Node aStar(Node c, int[] g, ArrayList<Node> open, ArrayList<Node> closed, Node finalState)
 	{
-		open.add(c);
 		if (c.equalsLayoutOnly(g))
-			return c;
-			//change to node finalNode = c
-			//call again if there is another state with a lower fscore
-			//if there is no lower fscore, return finalNode
+		{
+			try
+			{
+				finalState = (Node)c.clone();
+			}
+			catch (Exception e)
+			{
+				System.out.print(e.getMessage());
+			}
+			/* change to node finalNode = c
+			 * DONE!
+			 * call again if there is another state with a lower fscore
+			 * DONE!
+			 * if there is no lower fscore, return finalNode
+			 * DONE!
+			 */
+			c = lowerFScore(finalState, open);
+			if (!c.equals(finalState))
+				aStar(c, g, open, closed, finalState);
+			else
+				return finalState;
+		}
 		else
 		{
 			//move line 146 to before call
+			// DONE!
 			//here get children and add all to open
 			//move c to closed
 			//loop through open to check if its already in closed if true remove
@@ -164,6 +182,15 @@ public class is17197813
 		}
 	}
 
+	public static Node lowerFScore(Node aNode, ArrayList<Node> open)
+	{
+		Node newLowest = aNode;
+		for (Node n : open)
+			if (aNode.getfScore() > n.getfScore())
+				newLowest = n;
+		return newLowest;
+	}
+
 	public static int calculateHScore(int[] current)
 	{
 		int hScore = 0;
@@ -171,7 +198,7 @@ public class is17197813
 		{
 			int num = current[i];
 			int goalIndex = findGoalIndex(num);
-			hScore += findGoalDistance(i, goalIndex);//Math.abs(goalIndex - i);
+			hScore += findGoalDistance(i, goalIndex);
 		}
 		return hScore;
 	}
@@ -383,9 +410,9 @@ class validator
 	{
 		//System.out.println("I am the constructor,\nFear me\nROOOAAAARR!!"); just checking that this works and it does, yay!
 		errorMessages = new String [] {"Sorry, it would appear that you did something wrong.\nIt's your fault not mine!", 
-														"I mean you could do that...\nBut you could also follow the instructions I guess.",
-														"Did your hand slip?\nI mean there is no way you typed that in deliberately right?",
-														"You can keep on going trying to break this code.\nOr you could actually do what it asks."};
+										"I mean you could do that...\nBut you could also follow the instructions I guess.",
+										"Did your hand slip?\nI mean there is no way you typed that in deliberately right?",
+										"You can keep on going trying to break this code.\nOr you could actually do what it asks."};
 	}
 
 	/**
@@ -456,6 +483,17 @@ class Node
 		this.previous = previous;
 	}
 
+	private Node(int[] layout, int gScore, int hScore, int fScore,
+				 ArrayList<Node> children, Node previous)
+	{
+		this.layout = layout;
+		this.gScore = gScore;
+		this.hScore = hScore;
+		this.fScore = fScore;
+		this.children = children;
+		this.previous = previous;
+	}
+
 	/**
 	 * @return the gScore
 	 */
@@ -502,5 +540,11 @@ class Node
 	public boolean equalsLayoutOnly(int[] end)
 	{
 		return Arrays.equals(layout, end);
+	}
+
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		return new Node(Arrays.copyOf(layout, layout.length), gScore,
+						hScore, fScore, children, previous);
 	}
 }
