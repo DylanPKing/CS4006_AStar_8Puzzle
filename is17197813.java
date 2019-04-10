@@ -65,8 +65,7 @@ public class is17197813
 		if(!Arrays.equals(start, end))
 		{
 			int rows = (int)Math.sqrt((current.length));
-			printState(current, rows);
-			validMoves(current, rows);
+			System.out.print(currentNode.toString());
 		}
 		else
 		{
@@ -499,5 +498,36 @@ class Node
 	public boolean equalsLayoutOnly(int[] end)
 	{
 		return Arrays.equals(layout, end);
+	}
+
+	@Override
+	public String toString() {
+		int[] current = layout;
+		int rows = 0;
+		String output = "";
+
+		for(int i = 0; i < current.length; i++)
+		{
+			if(current[i] != 0)
+				output += current[i] + " ";
+			else
+				output += "  ";
+
+			if (i % (rows) == rows - 1)
+				output += "\n";
+		}
+
+		return output;
+	}
+
+	public void generateChildren() {
+		
+	}
+
+	/**
+	 * @return the children
+	 */
+	public int getNumOfChildren() {
+		return children.size();
 	}
 }
