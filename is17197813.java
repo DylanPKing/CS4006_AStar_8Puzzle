@@ -165,7 +165,7 @@ public class is17197813
 			 */
 			c = lowerFScore(finalState, open);
 			if (!c.equals(finalState))
-				aStar(c, g, open, closed, finalState);
+				return aStar(c, g, open, closed, finalState);
 			else
 				return finalState;
 		}
@@ -175,10 +175,36 @@ public class is17197813
 			// DONE!
 			//here get children and add all to open
 			//move c to closed
-			//loop through open to check if its already in closed if true remove
+			//loop through open to check if child already in closed if true remove
 			//and find the one with the lowest f score
 			//recursion astar lowest fscore = c
 			//the rest is the same
+			// I'll start here I guess Ss
+
+			closed.add(c);
+			open.remove(open.indexOf(c));
+
+			// Check if new child is in closed -> if true remove
+			for(int i = open.size() - 1 - c.getNumberOfChildren(); i < open.size(); i++)
+			{
+				for(int j = 0; j < closed.size(); j++)
+				{
+					if(open.get(i).equalsLayoutOnly(closed.get(j).getLayout()))
+					{
+						if(open.get(i).getfScore() < closed.get(j).getfScore())
+						{
+							closed.remove(closed.indexOf(j));
+						}
+						else
+						{
+							open.remove(open.indexOf(i));
+							// If i need to add it back to closed do it here
+						}
+					}
+				}
+			}
+			c = lowerFScore(open.get(0), open);
+			return aStar(c, g, open, closed, finalState);
 		}
 	}
 
