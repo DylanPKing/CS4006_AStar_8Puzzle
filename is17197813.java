@@ -98,10 +98,9 @@ public class is17197813
 	{
 		// Displays some lovely buttons to select from
 		String [] puzzleTypes = {"8-Puzzle", "15-Puzzle"};
-		puzzleSize = JOptionPane.showOptionDialog(null,
-            											"Would you like to use the 8-Puzzle or the 15-Puzzle?", "Puzzle Selector",
-             											JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
-														 null, puzzleTypes, puzzleTypes[0]);
+		puzzleSize = JOptionPane.showOptionDialog(null, "Would you like to use the 8-Puzzle or the 15-Puzzle?",
+												 "Puzzle Selector", JOptionPane.YES_NO_OPTION,
+												 JOptionPane.QUESTION_MESSAGE, null, puzzleTypes, puzzleTypes[0]);
 	}
 
 	/**
@@ -196,7 +195,7 @@ public class is17197813
 		{
 			int num = current[i];
 			int goalIndex = findGoalIndex(num);
-			hScore += findGoalDistance(i, goalIndex);//Math.abs(goalIndex - i);
+			hScore += findGoalDistance(i, goalIndex);
 		}
 		return hScore;
 	}
@@ -408,9 +407,9 @@ class validator
 	{
 		//System.out.println("I am the constructor,\nFear me\nROOOAAAARR!!"); just checking that this works and it does, yay!
 		errorMessages = new String [] {"Sorry, it would appear that you did something wrong.\nIt's your fault not mine!", 
-														"I mean you could do that...\nBut you could also follow the instructions I guess.",
-														"Did your hand slip?\nI mean there is no way you typed that in deliberately right?",
-														"You can keep on going trying to break this code.\nOr you could actually do what it asks."};
+										"I mean you could do that...\nBut you could also follow the instructions I guess.",
+										"Did your hand slip?\nI mean there is no way you typed that in deliberately right?",
+										"You can keep on going trying to break this code.\nOr you could actually do what it asks."};
 	}
 
 	/**
