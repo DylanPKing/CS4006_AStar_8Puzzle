@@ -83,11 +83,10 @@ public class is17197813
 	public static void welcome()
 	{
 		JOptionPane.showMessageDialog(null, "Welcome to our A* search  project." +
-																	"\nMade by:" + 
-																	"\nDylan King - 17197813" +
-																	"\nLouise Madden - 17198232" +
-																	"\nSzymon Sztyrmer - 17200296" + 
-																	"\nClick ok to continue.", "Greetings", 1);
+									  "\nMade by:" + "\nDylan King - 17197813" +
+									  "\nLouise Madden - 17198232" +
+									  "\nSzymon Sztyrmer - 17200296" + 
+									  "\nClick ok to continue.", "Greetings", 1);
 	}
 
 	/**
@@ -184,7 +183,7 @@ public class is17197813
 			open.remove(open.indexOf(c));
 
 			// Check if new child is in closed -> if true remove
-			for(int i = open.size() - 1 - c.getNumberOfChildren(); i < open.size(); i++)
+			for(int i = open.size() - 1 - c.getNumOfChildren(); i < open.size(); i++)
 			{
 				for(int j = 0; j < closed.size(); j++)
 				{
