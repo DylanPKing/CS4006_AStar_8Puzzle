@@ -193,13 +193,13 @@ public class is17197813
 			//recursion astar lowest fscore = c
 			//the rest is the same
 			// I'll start here I guess Ss
-
+			open.remove(c);
 			closed.add(c);
-			open.remove(open.indexOf(c));
+			
 			c.generateChildren(puzzleSize, open, closed);
 
 			// Check if new child is in closed -> if true remove
-			for(int i = open.size() - 1 - c.getNumOfChildren(); i < open.size(); i++)
+			for(int i = open.size() - c.getNumOfChildren(); i < open.size(); i++)
 			{
 				for(int j = 0; j < closed.size(); j++)
 				{
@@ -505,7 +505,7 @@ class Node
 	public String toString()
 	{
 		int[] current = layout;
-		int rows = 0;
+		int rows = (layout.length == 9) ? 3 : 4;
 		String output = "";
 
 		for(int i = 0; i < current.length; i++)
@@ -548,6 +548,7 @@ class Node
 			child[zeroIndex - rows] = 0;
 
 			Node south = new Node(child, this.getgScore() + 1, this);
+			children.add(south);
 			open.add(south);
 		}
 		child = Arrays.copyOf(layout, layout.length);
@@ -555,10 +556,11 @@ class Node
 		if(zeroIndex <= (child.length - 1 - rows))
 		{
 			
-			child[zeroIndex] = child[zeroIndex - rows];
-			child[zeroIndex - rows] = 0;
+			child[zeroIndex] = child[zeroIndex + rows];
+			child[zeroIndex + rows] = 0;
 
 			Node north = new Node(child, this.getgScore() + 1, this);
+			children.add(north);
 			open.add(north);
 		}
 		child = Arrays.copyOf(layout, layout.length);
@@ -566,10 +568,11 @@ class Node
 		if(zeroIndex % rows != (rows-1))
 		{
 			
-			child[zeroIndex] = child[zeroIndex - rows];
-			child[zeroIndex - rows] = 0;
+			child[zeroIndex] = child[zeroIndex + 1];
+			child[zeroIndex + 1] = 0;
 
 			Node west = new Node(child, this.getgScore() + 1, this);
+			children.add(west);
 			open.add(west);
 		}
 		child = Arrays.copyOf(layout, layout.length);
@@ -577,10 +580,11 @@ class Node
 		if(zeroIndex % rows != 0)
 		{
 			
-			child[zeroIndex] = child[zeroIndex - rows];
-			child[zeroIndex - rows] = 0;
+			child[zeroIndex] = child[zeroIndex - 1];
+			child[zeroIndex - 1] = 0;
 
 			Node east = new Node(child, this.getgScore() + 1, this);
+			children.add(east);
 			open.add(east);
 		}
 	}
