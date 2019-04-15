@@ -65,7 +65,7 @@ public class is17197813
 		open.add(currentNode);
 		Node finalState = aStar(currentNode, end, open, closed, null);
 
-		if(!Arrays.equals(start, end))
+		/*if(!Arrays.equals(start, end))
 		{
 			int rows = (int)Math.sqrt((current.length));
 			System.out.print(currentNode.toString());
@@ -73,6 +73,19 @@ public class is17197813
 		else
 		{
 			JOptionPane.showMessageDialog(null, "Congratulations! You got to the end");
+		}*/
+		ArrayList<Node> finalPath = new ArrayList<Node>();
+		Node next = finalState;
+		do 
+		{
+			finalPath.add(next);
+			next = next.getPrevious();
+		}
+		while(next.getPrevious() != null);
+
+		for(int i  = finalPath.size() - 1; i >= 0; i--)
+		{
+			System.out.println(finalPath.get(i).toString());
 		}
 	}
 
@@ -172,7 +185,9 @@ public class is17197813
 			//move line 146 to before call
 			// DONE!
 			//here get children and add all to open
+			// DONE!
 			//move c to closed
+			// DONE!
 			//loop through open to check if child already in closed if true remove
 			//and find the one with the lowest f score
 			//recursion astar lowest fscore = c
@@ -181,6 +196,7 @@ public class is17197813
 
 			closed.add(c);
 			open.remove(open.indexOf(c));
+			c.generateChildren(puzzleSize, open, closed);
 
 			// Check if new child is in closed -> if true remove
 			for(int i = open.size() - 1 - c.getNumOfChildren(); i < open.size(); i++)
@@ -313,101 +329,7 @@ public class is17197813
 		return goal;
 	}
 
-	/**
-	 * This method prints the current state of the puzzle
-	 * @param int[] the current state
-	 * @param int rows so I know when to new line
-	 * @author Louise Madden
-	 */
-	public static void printState(int current[], int rows)
-	{
-		for(int i = 0; i < current.length; i++)
-		{
-			if(current[i] != 0)
-				System.out.print(current[i] + " ");
-			else
-				System.out.print("  ");
-
-			if (i % (rows) == rows - 1)
-				System.out.print("\n");
-		}
-	}
-
-	/**
-	 * Method to determne what directions are valid moves.
-	 * Void for the moment until I figure out what I need to change it to if anything
-	 * @param int[] current state because I cant get the next move if I don't know where I am now
-	 * @param int rows, need to know the row size to know possible directions
-	 * @author Louise Madden
-	 */
-	public static void validMoves(int current[], int rows)//change to pass in a node and open and closed
-	{
-		//stop printing
-		//generate them all as new nodes
-		//add them to the open list
-		//remember to pass current in as the parent of the new nodes
-		
-		int zeroIndex = 0;
-		
-		for(int i = 0; i < current.length; i++)
-		{
-			if(current[i] == 0)
-			{
-				zeroIndex = i;
-				break;
-			}
-		}
-		char[] options = {'a', 'b', 'c', 'd'};
-		int optionCount = 0;
-		int[] layout = Arrays.copyOf(current, current.length);
-
-		if(zeroIndex >= rows)
-		{
-			System.out.println("(" + options[optionCount] + ") " + current[zeroIndex - rows] + " to the south");
-			optionCount++;
-			layout[zeroIndex] = layout[zeroIndex - rows];
-			layout[zeroIndex - rows] = 0;
-
-			Node south = new Node(layout, 1);
-			System.out.println("\th score = " + south.gethScore() + "\n");
-		}
-
-		if(zeroIndex <= (current.length - rows))
-		{
-			System.out.println("(" + options[optionCount] + ") "   + current[zeroIndex + rows] + " to the north");
-			optionCount++;
-			layout = Arrays.copyOf(current, current.length);
-			layout[zeroIndex] = layout[zeroIndex + rows];
-			layout[zeroIndex + rows] = 0;
-
-			Node north = new Node(layout, 1);
-			System.out.println("\th score = " + north.gethScore() + "\n");
-		}
-
-		if(zeroIndex % rows != (rows-1))
-		{
-			System.out.println("(" + options[optionCount] + ") "  + current[zeroIndex + 1] + " to the west");
-			optionCount++;
-			layout = Arrays.copyOf(current, current.length);
-			layout[zeroIndex] = layout[zeroIndex + 1];
-			layout[zeroIndex + 1] = 0;
-
-			Node west = new Node(layout, 1);
-			System.out.println("\th score = " + west.gethScore() + "\n");
-		}
-
-		if(zeroIndex % rows != 0)
-		{
-			System.out.println("(" + options[optionCount] + ") "  + current[zeroIndex - 1] + " to the east");
-			optionCount++;
-			layout = Arrays.copyOf(current, current.length);
-			layout[zeroIndex] = layout[zeroIndex - 1];
-			layout[zeroIndex - 1] = 0;
-
-			Node east = new Node(layout, 1);
-			System.out.println("\th score = " + east.gethScore() + "\n");
-		}
-	}
+	
 }
 
 /**
@@ -550,6 +472,11 @@ class Node
 		return layout;
 	}
 
+	public final Node getPrevious()
+	{
+		return previous;
+	}
+
 	@Override
 	public boolean equals(Object obj)
 	{
@@ -593,9 +520,67 @@ class Node
 		return output;
 	}
 
-	public void generateChildren()
+	public void generateChildren(int puzzleSize, ArrayList<Node> open, ArrayList<Node> closed)
 	{
+		int rows;
+		if(puzzleSize == 0)
+			rows = 3;
+		else
+			rows = 4;
+		int[] child = Arrays.copyOf(layout, layout.length);
+		int zeroIndex = 0;
 		
+		for(int i = 0; i < child.length; i++)
+		{
+			if(child[i] == 0)
+			{
+				zeroIndex = i;
+				break;
+			}
+		}
+
+		if(zeroIndex >= rows)
+		{
+			
+			child[zeroIndex] = child[zeroIndex - rows];
+			child[zeroIndex - rows] = 0;
+
+			Node south = new Node(child, this.getgScore() + 1, this);
+			open.add(south);
+		}
+		child = Arrays.copyOf(layout, layout.length);
+
+		if(zeroIndex <= (child.length - 1 - rows))
+		{
+			
+			child[zeroIndex] = child[zeroIndex - rows];
+			child[zeroIndex - rows] = 0;
+
+			Node north = new Node(child, this.getgScore() + 1, this);
+			open.add(north);
+		}
+		child = Arrays.copyOf(layout, layout.length);
+
+		if(zeroIndex % rows != (rows-1))
+		{
+			
+			child[zeroIndex] = child[zeroIndex - rows];
+			child[zeroIndex - rows] = 0;
+
+			Node west = new Node(child, this.getgScore() + 1, this);
+			open.add(west);
+		}
+		child = Arrays.copyOf(layout, layout.length);
+
+		if(zeroIndex % rows != 0)
+		{
+			
+			child[zeroIndex] = child[zeroIndex - rows];
+			child[zeroIndex - rows] = 0;
+
+			Node east = new Node(child, this.getgScore() + 1, this);
+			open.add(east);
+		}
 	}
 
 	/**
