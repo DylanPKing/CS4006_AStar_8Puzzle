@@ -83,6 +83,7 @@ public class is17197813
 		}
 		while(next.getPrevious() != null);
 
+		System.out.println(currentNode.toString());
 		for(int i  = finalPath.size() - 1; i >= 0; i--)
 		{
 			System.out.println(finalPath.get(i).toString());
@@ -157,7 +158,7 @@ public class is17197813
 	
 	public static Node aStar(Node c, int[] g, ArrayList<Node> open, ArrayList<Node> closed, Node finalState)
 	{
-		if (c.equalsLayoutOnly(g))
+		/*if (c.equalsLayoutOnly(g))
 		{
 			try
 			{
@@ -167,13 +168,13 @@ public class is17197813
 			{
 				System.out.print(e.getMessage());
 			}
-			/* change to node finalNode = c
-			 * DONE!
-			 * call again if there is another state with a lower fscore
-			 * DONE!
-			 * if there is no lower fscore, return finalNode
-			 * DONE!
-			 */
+			// change to node finalNode = c
+			// DONE!
+			// call again if there is another state with a lower fscore
+			// DONE!
+			// if there is no lower fscore, return finalNode
+			// DONE!
+			//
 			c = lowerFScore(finalState, open);
 			if (!c.equals(finalState))
 				return aStar(c, g, open, closed, finalState);
@@ -199,21 +200,25 @@ public class is17197813
 			c.generateChildren(puzzleSize, open, closed);
 
 			// Check if new child is in closed -> if true remove
-			for(int i = open.size() - c.getNumOfChildren(); i < open.size(); i++)
+			int openSize = open.size();
+			for(int i = open.size() - c.getNumOfChildren(); i < openSize; i++)
 			{
-				for(int j = 0; j < closed.size(); j++)
+				int closedSize = closed.size();
+				Node nOne = open.get(i);
+				for(int j = 0; j < closedSize; j++)
 				{
-					Node nOne = open.get(i);
 					Node nTwo = closed.get(j);
 					if(nOne.equalsLayoutOnly(nTwo.getLayout()))
 					{
 						if(nOne.getfScore() < nTwo.getfScore())
 						{
 							closed.remove(nTwo);
+							closedSize--;
 						}
 						else
 						{
 							open.remove(nOne);
+							openSize--;
 							// If i need to add it back to closed do it here
 						}
 					}
@@ -221,6 +226,64 @@ public class is17197813
 			}
 			c = lowerFScore(open.get(0), open);
 			return aStar(c, g, open, closed, finalState);
+		}*/
+		while (true)
+		{
+			if (c.equalsLayoutOnly(g))
+			{
+				try
+				{
+					finalState = (Node)c.clone();
+				}
+				catch (Exception e)
+				{
+					System.out.print(e.getMessage());
+				}
+				// change to node finalNode = c
+				// DONE!
+				// call again if there is another state with a lower fscore
+				// DONE!
+				// if there is no lower fscore, return finalNode
+				// DONE!
+				//
+				c = lowerFScore(finalState, open);
+				if (c.equals(finalState))
+					return finalState;
+			}
+			else
+			{
+				open.remove(c);
+				closed.add(c);
+				
+				c.generateChildren(puzzleSize, open, closed);
+
+				// Check if new child is in closed -> if true remove
+				int openSize = open.size();
+				for(int i = open.size() - c.getNumOfChildren(); i < openSize; i++)
+				{
+					int closedSize = closed.size();
+					Node nOne = open.get(i);
+					for(int j = 0; j < closedSize; j++)
+					{
+						Node nTwo = closed.get(j);
+						if(nOne.equalsLayoutOnly(nTwo.getLayout()))
+						{
+							if(nOne.getfScore() < nTwo.getfScore())
+							{
+								closed.remove(nTwo);
+								closedSize--;
+							}
+							else
+							{
+								open.remove(nOne);
+								openSize--;
+								// If i need to add it back to closed do it here
+							}
+						}
+					}
+				}
+				c = lowerFScore(open.get(0), open);
+			}
 		}
 	}
 
@@ -228,7 +291,7 @@ public class is17197813
 	{
 		Node newLowest = aNode;
 		for (Node n : open)
-			if (aNode.getfScore() > n.getfScore())
+			if (newLowest.getfScore() > n.getfScore())
 				newLowest = n;
 		return newLowest;
 	}
@@ -251,13 +314,21 @@ public class is17197813
 		/* Compares the current index of the value in question with 
 		   the goal index, based on the 1D array we use */
 		int distance = Math.abs(end - start);
-		// Checks if it's an 8-puzzle or 15-puzzle 
+		// Checks if it's an 8-puzzle or 15-puzzle
+		if (distance == 0)
+			return 0;
 		if (puzzleSize == 0)
 		{
 			// if the goal is directly above/below/to the side
 			if (distance == 1 || distance == 3)
+			{
 				score = 1;
-
+				if ((start % 3 == 2 && end % 3 == 0) ||
+					(start % 3 == 0 && end % 3 == 2))
+					score = 3;
+			}
+			else if (distance == 5)
+				score = 3;
 			/* covers all other cases except top-left <-> bottom-middle
 			   calculates moving 2 spaces in any direction, and corner to corner */
 			else if (distance == 2 || distance == 4 || distance == 6 || distance == 8)
@@ -269,6 +340,7 @@ public class is17197813
 				if ((start == 2 && end == 6) || (start == 6 && end == 2) || distance == 8)
 					score = 4;
 			}
+
 			// covers final case: top left <-> bottom middle
 			else if (distance == 7)
 				score = 3;
@@ -511,14 +583,13 @@ class Node
 		for(int i = 0; i < current.length; i++)
 		{
 			if(current[i] != 0)
-				output += current[i] + " ";
+				output += current[i] + "  ";
 			else
-				output += "  ";
+				output += "   ";
 
 			if (i % (rows) == rows - 1)
 				output += "\n";
 		}
-
 		return output;
 	}
 
