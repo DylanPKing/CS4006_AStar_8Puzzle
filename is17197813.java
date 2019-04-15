@@ -203,15 +203,17 @@ public class is17197813
 			{
 				for(int j = 0; j < closed.size(); j++)
 				{
-					if(open.get(i).equalsLayoutOnly(closed.get(j).getLayout()))
+					Node nOne = open.get(i);
+					Node nTwo = closed.get(j);
+					if(nOne.equalsLayoutOnly(nTwo.getLayout()))
 					{
-						if(open.get(i).getfScore() < closed.get(j).getfScore())
+						if(nOne.getfScore() < nTwo.getfScore())
 						{
-							closed.remove(closed.indexOf(j));
+							closed.remove(nTwo);
 						}
 						else
 						{
-							open.remove(open.indexOf(i));
+							open.remove(nOne);
 							// If i need to add it back to closed do it here
 						}
 					}
